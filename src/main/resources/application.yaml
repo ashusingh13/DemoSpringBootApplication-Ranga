@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: @project.name@
+    version: @project.version@
+  datasource:
+    url: jdbc:h2:mem:demo
+    username: "${DB_USERNAME:sa}"
+    password: "${DB_PASSWORD:password}"
+    driver-class-name: org.h2.Driver
+  jpa:
+    show-sql: false
+    database-platform: org.hibernate.dialect.H2Dialect
+    properties:
+      hibernate:
+        format_sql: false
+    hibernate: 
+      ddl-auto: validate
+  output:
+    ansi:
+      enabled: always
+server:
+  port: 8080 
+management:
+  server:
+    port: 8081
+  tracing:
+    sampling:
+      probability: 1.0
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http:
+          server:
+            requests: true
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus
+
+# This setting will be removed with logback.xml file
+logging:
+  level:
+    root: INFO
+    '[org.hibernate.envers.boot]': OFF
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
